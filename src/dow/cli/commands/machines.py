@@ -65,7 +65,7 @@ def delete(name: str):
         droplet_id = droplet["id"]
         do.droplet_delete(droplet_id)
 
-        msg(f"Machine '{name}' shutdown")
+        msg(f"Machine '{name}' stopped")
 
     config.delete_machine(name)
     msg(f"Machine '{name}' deleted")
@@ -99,7 +99,7 @@ def start(name: str):
 
 @machines.command()
 @click.argument("name")
-def shutdown(name):
+def stop(name):
     droplet = do.droplet_find_by_name(name)
     if droplet is None:
         msg(f"Machine '{name}' not started")
@@ -107,7 +107,7 @@ def shutdown(name):
     droplet_id = droplet["id"]
     do.droplet_delete(droplet_id)
 
-    msg(f"Machine '{name}' shutdown")
+    msg(f"Machine '{name}' stopped")
 
 
 @machines.command()
@@ -138,7 +138,7 @@ def create(name: str, size: str, image: str, volume: str, username: str, swapsiz
 @click.option("--volume")
 @click.option("--username")
 @click.option("--swapsize", type=int)
-def update(
+def edit(
     name: str,
     size: Optional[str],
     image: Optional[str],
