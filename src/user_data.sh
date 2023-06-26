@@ -10,19 +10,17 @@ log "installing basic stuff"
 apt install --yes \
   sudo \
   zsh \
-  git \
   stow \
   byobu \
   curl \
-  htop \
   ca-certificates \
   gnupg \
   lsb-release \
   rsync \
-  jo \
-  jq \
-  ripgrep \
-  ncdu
+  gcc \
+  build-essential libssl-dev zlib1g-dev \
+  libbz2-dev libreadline-dev libsqlite3-dev curl \
+  libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
 log "generating locale"
 echo 'en_US.UTF-8 UTF-8' | sudo tee -a /etc/locale.gen
@@ -52,7 +50,8 @@ log "symlinking home"
 mkdir -p "/mnt/${VOLUME_NAME}/home/${USERNAME}"
 chown "${USERNAME}:" "/mnt/${VOLUME_NAME}/home/${USERNAME}"
 rm -rf /home
-ln -s "/mnt/${VOLUME_NAME}/home" /home
+mkdir -p /home
+mount -o bind "/mnt/${VOLUME_NAME}/home" /home
 
 log "symlink /var/lib/docker"
 mkdir -p "/mnt/${VOLUME_NAME}/var_lib_docker"
@@ -99,5 +98,27 @@ bind b send-prefix
 BYOBU
 
 touch "/home/${USERNAME}/.byobu/.welcome-displayed"
+
+log "starting inactivity check"
+cat <<INACTIVITY > "/usr/local/bin/inactivity.sh"
+#!/bin/bash -eu
+
+function number_of_connections() {
+  w --no-header | awk '{print \$3}' | grep -E '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | wc -l
+}
+
+LAST_ACTIVITY_TS="\$(date +%s)"
+
+while true; do
+  TS="\$(date +%s)"
+  if [[ "\$(number_of_connections)" -gt 0 ]]; then
+    LAST_ACTIVITY_TS="\${TS}"
+  fi
+  INACTIVITY="\$((TS - LAST_ACTIVITY_TS))"
+  printf "%s\t%s\n" "\${TS}" "\${INACTIVITY}" > /tmp/inactivity
+  sleep 1
+done
+INACTIVITY
+nohup bash "/usr/local/bin/inactivity.sh" &>/dev/null &
 
 echo "done" >> "${INSTALL_LOG}"
