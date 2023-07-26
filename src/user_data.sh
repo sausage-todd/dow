@@ -1,27 +1,27 @@
 function log() {
-  local msg="$1"
+	local msg="$1"
 
-  echo "[$(date -u '+%Y-%m-%d %H:%M:%S')] $msg" >> "${INSTALL_LOG}"
+	echo "[$(date -u '+%Y-%m-%d %H:%M:%S')] $msg" >>"${INSTALL_LOG}"
 }
 
 log "apt update"
 apt update
 log "installing basic stuff"
 apt install --yes \
-  sudo \
-  zsh \
-  stow \
-  byobu \
-  curl \
-  ca-certificates \
-  gnupg \
-  lsb-release \
-  rsync \
-  gcc \
-  inetutils-telnet \
-  build-essential libssl-dev zlib1g-dev \
-  libbz2-dev libreadline-dev libsqlite3-dev curl \
-  libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+	sudo \
+	zsh \
+	stow \
+	byobu \
+	curl \
+	ca-certificates \
+	gnupg \
+	lsb-release \
+	rsync \
+	gcc \
+	inetutils-telnet \
+	build-essential libssl-dev zlib1g-dev \
+	libbz2-dev libreadline-dev libsqlite3-dev curl \
+	libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
 log "generating locale"
 echo 'en_US.UTF-8 UTF-8' | sudo tee -a /etc/locale.gen
@@ -30,7 +30,7 @@ locale-gen
 log "creating user"
 useradd "${USERNAME}"
 usermod --append --groups sudo "${USERNAME}"
-echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/91-${USERNAME}"
+echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >"/etc/sudoers.d/91-${USERNAME}"
 
 log "mounting volume"
 mkdir -p "/mnt/${VOLUME_NAME}"
@@ -65,18 +65,18 @@ chsh -s "$(command -v zsh)" "${USERNAME}"
 log "preparing to install docker"
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
 log "apt update"
 apt update
 log "installing docker"
 apt install --yes \
-  docker-ce \
-  docker-ce-cli \
-  containerd.io \
-  docker-compose-plugin \
-  docker-buildx-plugin
+	docker-ce \
+	docker-ce-cli \
+	containerd.io \
+	docker-compose-plugin \
+	docker-buildx-plugin
 
 log "adding user to docker group"
 usermod --append --groups docker "${USERNAME}"
@@ -91,7 +91,7 @@ chown --recursive "${USERNAME}:" "/home/${USERNAME}/.ssh"
 
 log "configuring byobu"
 mkdir -p "/home/${USERNAME}/.byobu"
-cat <<BYOBU > "/home/${USERNAME}/.byobu/keybindings.tmux"
+cat <<BYOBU >"/home/${USERNAME}/.byobu/keybindings.tmux"
 unbind-key -n C-a
 set -g prefix ^A
 set -g prefix2 F12
@@ -101,7 +101,7 @@ BYOBU
 touch "/home/${USERNAME}/.byobu/.welcome-displayed"
 
 log "starting inactivity check"
-cat <<INACTIVITY > "/usr/local/bin/inactivity.sh"
+cat <<INACTIVITY >"/usr/local/bin/inactivity.sh"
 #!/bin/bash -eu
 
 function number_of_connections() {
@@ -122,4 +122,4 @@ done
 INACTIVITY
 nohup bash "/usr/local/bin/inactivity.sh" &>/dev/null &
 
-echo "done" >> "${INSTALL_LOG}"
+echo "done" >>"${INSTALL_LOG}"
