@@ -50,6 +50,19 @@ def volume_create(
     )
 
 
+def volume_resize(name: str, size_gigabytes: int):
+    volume = volume_find_by_name(name)
+    volume_id = volume["id"]
+
+    body = {
+        "type": "resize",
+        "size_gigabytes": size_gigabytes,
+        "region": os.environ["DO_REGION"],
+    }
+
+    return post(f"/volumes/{volume_id}/actions", **body)
+
+
 def volume_find_by_name(name: str):
     result = get("/volumes", name=name)
     if len(result["volumes"]) == 0:

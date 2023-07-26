@@ -1,5 +1,4 @@
 import click
-from requests.api import request
 
 from dow import do
 from dow.cli.utils import msg, tab_data
@@ -28,3 +27,11 @@ def delete(name: str):
 def create(name: str, size: int):
     do.volume_create(name, size)
     msg(f"Created volume '{name}'")
+
+
+@volumes.command()
+@click.option("--name", required=True)
+@click.option("--size", type=int, required=True)
+def resize(name: str, size: int):
+    do.volume_resize(name, size)
+    msg(f"Resized volume '{name}' to {size}GB")
