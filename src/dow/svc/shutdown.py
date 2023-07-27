@@ -5,12 +5,12 @@ from dow.cli.utils import msg
 
 
 def __wait_until_shutdown(droplet_id: str, action_id: str):
-    for _ in range(5):
+    for _ in range(6):
         action_status = do.droplet_action_get(droplet_id, action_id)["action"]["status"]
         if action_status == "completed":
             return
         msg(f"Waiting for shutdown to complete ({action_status})")
-        time.sleep(2)
+        time.sleep(5)
 
     msg("Graceful shutdown failed")
 
