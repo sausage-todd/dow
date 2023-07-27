@@ -5,7 +5,7 @@ from dow import do
 from dow.cli.utils import tab_data
 
 
-@click.command(name="list-sizes")
+@click.command(name="list-sizes", help="List available droplet sizes")
 def list_sizes():
     fields = [
         "slug",

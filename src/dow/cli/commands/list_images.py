@@ -4,7 +4,7 @@ from dow import do
 from dow.cli.utils import tab_data
 
 
-@click.command(name="list-images")
+@click.command(name="list-images", help="List available droplet images")
 def list_images():
     fields = [
         "slug",
