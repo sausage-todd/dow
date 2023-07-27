@@ -6,10 +6,9 @@ import colorama
 from dow import config, do
 from dow.cli.utils import msg, tab_data
 from dow.config.data import MachineConfig
-from dow.do import svc
-from dow.svc import create_machine
+from dow.svc import create_machine, ssh_config
 from dow.svc.data import MachineStatus
-from dow.svc.list_machines import list_machines
+from dow.svc.list_machines import full_machine, list_machines
 from dow.svc.shutdown import shutdown_machine
 
 
@@ -82,9 +81,10 @@ def connect(name: str):
         msg(f"Machine '{name}' not started")
         return
 
-    ip_addr = svc.droplet_network(droplet)
+    machine = full_machine(machine_config, droplet)
+    host_key = ssh_config.update_entry(machine)
 
-    msg(f"To connect: ssh -A {machine_config.username}@{ip_addr}")
+    msg(f"To connect: ssh {host_key}")
 
 
 @machines.command()
@@ -107,6 +107,10 @@ def stop(name):
         msg(f"Machine '{name}' not started")
         return
     shutdown_machine(droplet["id"])
+
+    machine_config = config.get_machine(name)
+    machine = full_machine(machine_config, droplet)
+    ssh_config.remove_entry(machine)
 
     msg(f"Machine '{name}' stopped")
 
