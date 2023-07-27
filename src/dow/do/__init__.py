@@ -122,3 +122,15 @@ def droplet_find_by_name(name: str):
 
 def droplet_delete(droplet_id: str):
     delete(f"/droplets/{droplet_id}")
+
+
+def droplet_shutdown(droplet_id: str):
+    body = {
+        "type": "shutdown",
+    }
+    result = post(f"/droplets/{droplet_id}/actions", **body)
+    return result["action"]["id"]
+
+
+def droplet_action_get(droplet_id: str, action_id: str):
+    return get(f"/droplets/{droplet_id}/actions/{action_id}")

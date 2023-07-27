@@ -10,6 +10,7 @@ from dow.do import svc
 from dow.svc import create_machine
 from dow.svc.data import MachineStatus
 from dow.svc.list_machines import list_machines
+from dow.svc.shutdown import shutdown_machine
 
 
 @click.group()
@@ -104,8 +105,7 @@ def stop(name):
     if droplet is None:
         msg(f"Machine '{name}' not started")
         return
-    droplet_id = droplet["id"]
-    do.droplet_delete(droplet_id)
+    shutdown_machine(droplet["id"])
 
     msg(f"Machine '{name}' stopped")
 

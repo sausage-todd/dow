@@ -53,6 +53,7 @@ chown "${USERNAME}:" "/mnt/${VOLUME_NAME}/home/${USERNAME}"
 rm -rf /home
 mkdir -p /home
 mount -o bind "/mnt/${VOLUME_NAME}/home" /home
+echo "/mnt/${VOLUME_NAME}/home /home none defaults,bind 0 0" | sudo tee -a /etc/fstab
 
 log "symlink /var/lib/docker"
 mkdir -p "/mnt/${VOLUME_NAME}/var_lib_docker"
