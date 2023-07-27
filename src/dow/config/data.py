@@ -9,3 +9,4 @@ class MachineConfig(BaseModel):
     swapsize: int
     username: str
     init: str = ""
+    ports: list[str] = []

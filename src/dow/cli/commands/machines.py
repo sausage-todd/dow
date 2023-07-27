@@ -52,6 +52,7 @@ def list():
             "swapsize",
             "status",
             "ip",
+            "ports",
         ],
         list_machines(),
         field_mapper={"status": status_mapper},
@@ -158,3 +159,28 @@ def edit(
 
     config.add_machine(new_machine_config)
     msg(f"Updated machine {name}")
+
+
+@machines.group()
+def ports():
+    pass
+
+
+@ports.command()
+@click.option("--machine", required=True)
+@click.option("--port", required=True)
+def add(machine: str, port: str):
+    machine_config = config.get_machine(machine)
+    machine_config.ports.append(port)
+    config.add_machine(machine_config)
+    msg(f"Added port '{port}' to machine '{machine}'")
+
+
+@ports.command()
+@click.option("--machine", required=True)
+@click.option("--port", required=True)
+def remove(machine: str, port: str):
+    machine_config = config.get_machine(machine)
+    machine_config.ports.remove(port)
+    config.add_machine(machine_config)
+    msg(f"Removed port '{port}' from machine '{machine}'")

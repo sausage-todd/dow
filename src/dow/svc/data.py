@@ -17,3 +17,4 @@ class Machine(BaseModel):
     swapsize: int
     status: MachineStatus = MachineStatus.CONFIG
     ip: str = ""
+    ports: list[str] = []
