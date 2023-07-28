@@ -55,6 +55,7 @@ echo "${SWAPFILE} none swap defaults 0 0" | sudo tee -a /etc/fstab
 log "symlinking home"
 mkdir -p "/mnt/${VOLUME_NAME}/home/${USERNAME}"
 chown "${USERNAME}:" "/mnt/${VOLUME_NAME}/home/${USERNAME}"
+umount /home || true
 rm -rf /home
 mkdir -p /home
 mount -o bind "/mnt/${VOLUME_NAME}/home" /home
