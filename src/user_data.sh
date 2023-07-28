@@ -4,6 +4,11 @@ function log() {
 	echo "[$(date -u '+%Y-%m-%d %H:%M:%S')] $msg" >>"${INSTALL_LOG}"
 }
 
+if [[ -f "${INSTALL_LOG}" ]]; then
+	log "skipping another execution"
+	exit 0
+fi
+
 log "apt update"
 apt update
 log "installing basic stuff"
