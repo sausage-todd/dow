@@ -73,6 +73,13 @@ def delete(name: str):
     msg(f"Machine '{name}' deleted")
 
 
+def __connect_info(machine_config: MachineConfig, droplet: dict):
+    machine = full_machine(machine_config, droplet)
+    host_key = ssh_config.update_entry(machine)
+
+    msg(f"To connect: ssh {host_key}")
+
+
 @machines.command(help="Connect to machine")
 @click.argument("name", required=True, type=str)
 def connect(name: str):
@@ -82,22 +89,23 @@ def connect(name: str):
         msg(f"Machine '{name}' not started")
         return
 
-    machine = full_machine(machine_config, droplet)
-    host_key = ssh_config.update_entry(machine)
-
-    msg(f"To connect: ssh {host_key}")
+    __connect_info(machine_config, droplet)
 
 
 @machines.command(help="Start machine")
 @click.argument("name", required=True, type=str)
 def start(name: str):
+    machine_config = config.get_machine(name)
     droplet = do.droplet_find_by_name(name)
     if droplet is not None:
         msg(f"Machine '{name}' already started")
+        __connect_info(machine_config, droplet)
         return
 
-    machine_config = config.get_machine(name)
     create_machine.create(machine_config)
+
+    droplet = do.droplet_find_by_name(name)
+    __connect_info(machine_config, droplet)
 
 
 @machines.command(help="Stop machine")
