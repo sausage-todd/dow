@@ -3,7 +3,6 @@ import textwrap
 import time
 from contextlib import contextmanager
 
-from click.decorators import pass_meta_key
 from paramiko.client import AutoAddPolicy, SSHClient
 from paramiko.ssh_exception import NoValidConnectionsError
 

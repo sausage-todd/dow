@@ -1,5 +1,4 @@
 import click
-from tabulate import tabulate
 
 from dow import do
 from dow.cli.utils import tab_data

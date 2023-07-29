@@ -2,7 +2,6 @@ from typing import Optional
 
 import click
 import colorama
-from typing_extensions import Required
 
 from dow import config, do
 from dow.cli.utils import msg, tab_data
