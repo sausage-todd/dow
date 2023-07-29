@@ -13,6 +13,20 @@ def read_machines() -> list[MachineConfig]:
 
 def add_machine(config: MachineConfig):
     data = read()
+    if config.name in data:
+        raise Exception(f"Machine '{config.name}' already exists")
+
+    machine_dict = config.dict()
+    del machine_dict["name"]
+    data[config.name] = machine_dict
+    write(data)
+
+
+def update_machine(config: MachineConfig):
+    data = read()
+    if config.name not in data:
+        raise Exception(f"Machine '{config.name}' not found")
+
     machine_dict = config.dict()
     del machine_dict["name"]
     data[config.name] = machine_dict

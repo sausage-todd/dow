@@ -169,7 +169,7 @@ def edit(
         swapsize=swapsize or machine_config.swapsize,
     )
 
-    config.add_machine(new_machine_config)
+    config.update_machine(new_machine_config)
     msg(f"Updated machine {name}")
 
 
@@ -184,7 +184,7 @@ def ports():
 def add(machine: str, port: str):
     machine_config = config.get_machine(machine)
     machine_config.ports.append(port)
-    config.add_machine(machine_config)
+    config.update_machine(machine_config)
     msg(f"Added port '{port}' to machine '{machine}'")
 
 
@@ -194,5 +194,5 @@ def add(machine: str, port: str):
 def remove(machine: str, port: str):
     machine_config = config.get_machine(machine)
     machine_config.ports.remove(port)
-    config.add_machine(machine_config)
+    config.update_machine(machine_config)
     msg(f"Removed port '{port}' from machine '{machine}'")
