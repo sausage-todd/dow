@@ -42,7 +42,7 @@ mkdir -p "/mnt/${VOLUME_NAME}"
 chown "${USERNAME}": "/mnt/${VOLUME_NAME}"
 chmod 755 "/mnt/${VOLUME_NAME}"
 mount -o discard,defaults,noatime "/dev/disk/by-id/scsi-0DO_Volume_${VOLUME_NAME}" "/mnt/${VOLUME_NAME}"
-echo "/dev/disk/by-id/scsi-0DO_Volume_${VOLUME_NAME} /mnt/${VOLUME_NAME} ext4 defaults,nofail,discard 0 0" | sudo tee -a /etc/fstab
+echo "/dev/disk/by-id/scsi-0DO_Volume_${VOLUME_NAME} /mnt/${VOLUME_NAME} auto defaults,nofail,discard 0 0" | sudo tee -a /etc/fstab
 
 log "resizing volume"
 resize2fs "/dev/disk/by-id/scsi-0DO_Volume_${VOLUME_NAME}"
