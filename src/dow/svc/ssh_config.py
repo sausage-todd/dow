@@ -1,9 +1,16 @@
 from contextlib import contextmanager
+from dataclasses import dataclass
 from os.path import expanduser
 
 from sshconf import read_ssh_config
 
 from dow.svc.data import Machine
+
+
+@dataclass
+class SshConfEntry:
+    key: str
+    params: dict
 
 
 @contextmanager
@@ -18,25 +25,39 @@ def __map_port(port: str):
     return f"{port} localhost:{port}"
 
 
-def update_entry(machine: Machine):
+def __create_entry(machine: Machine, root=False) -> SshConfEntry:
+    key = f"{machine.name}-dow"
+    if root:
+        key += "-root"
+
+    params: dict = {
+        "HostName": machine.ip,
+        "User": machine.username if not root else "root",
+        "ForwardAgent": "yes",
+    }
+
+    if not root:
+        params["LocalForward"] = [__map_port(port) for port in machine.ports]
+
+    return SshConfEntry(key, params)
+
+
+def update_entry(machine: Machine, root: bool) -> str:
     with __conf() as conf:
-        key = f"{machine.name}-dow"
-        if key in conf.hosts():
-            conf.remove(key)
+        entry = __create_entry(machine, root)
 
-        conf.add(
-            key,
-            HostName=machine.ip,
-            User=machine.username,
-            ForwardAgent="yes",
-            LocalForward=[__map_port(port) for port in machine.ports],
-        )
+        if entry.key in conf.hosts():
+            conf.remove(entry.key)
 
-        return key
+        conf.add(entry.key, **entry.params)
+
+        return entry.key
 
 
 def remove_entry(machine: Machine):
     with __conf() as conf:
-        key = f"{machine.name}-dow"
-        if key in conf.hosts():
-            conf.remove(key)
+        for root in [True, False]:
+            entry = __create_entry(machine, root)
+            key = entry.key
+            if key in conf.hosts():
+                conf.remove(key)

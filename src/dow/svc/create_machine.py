@@ -101,7 +101,7 @@ def __wait_until_inited(ip_addr: str, install_log: str):
             msg(line)
 
 
-def create(machine_config: MachineConfig):
+def create(machine_config: MachineConfig, with_user_data: bool):
     volume_id = do.volume_find_by_name(machine_config.volume)["id"]
     msg(f"Using volume '{machine_config.volume}' ({volume_id})")
 
@@ -124,7 +124,7 @@ def create(machine_config: MachineConfig):
         size=machine_config.size,
         image=machine_config.image,
         ssh_keys=ssh_key_ids,
-        user_data=user_data,
+        user_data=user_data if with_user_data else "",
         volumes=[volume_id],
     )
 
@@ -141,7 +141,9 @@ def create(machine_config: MachineConfig):
     msg(f"Got IP address: {ip_addr}")
 
     __wait_until_connectable(ip_addr)
-    __wait_until_log_is_ready(ip_addr, install_log)
-    __wait_until_inited(ip_addr, install_log)
+
+    if with_user_data:
+        __wait_until_log_is_ready(ip_addr, install_log)
+        __wait_until_inited(ip_addr, install_log)
 
     msg(f"Machine '{machine_config.name}' is ready")

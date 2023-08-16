@@ -72,23 +72,24 @@ def delete(name: str):
     msg(f"Machine '{name}' deleted")
 
 
-def __connect_info(machine_config: MachineConfig, droplet: dict):
+def __connect_info(machine_config: MachineConfig, droplet: dict, root: bool):
     machine = full_machine(machine_config, droplet)
-    host_key = ssh_config.update_entry(machine)
+    host_key = ssh_config.update_entry(machine, root)
 
     msg(f"To connect: ssh {host_key}")
 
 
 @machines.command(help="Connect to machine")
 @click.argument("name", required=True, type=str)
-def connect(name: str):
+@click.option("--root", is_flag=True, help="Connect as root")
+def connect(name: str, root: bool):
     machine_config = config.get_machine(name)
     droplet = do.droplet_find_by_name(name)
     if droplet is None:
         msg(f"Machine '{name}' not started")
         return
 
-    __connect_info(machine_config, droplet)
+    __connect_info(machine_config, droplet, root)
 
 
 @machines.command(help="Start machine")
@@ -98,13 +99,35 @@ def start(name: str):
     droplet = do.droplet_find_by_name(name)
     if droplet is not None:
         msg(f"Machine '{name}' already started")
-        __connect_info(machine_config, droplet)
+        __connect_info(machine_config, droplet, root=False)
         return
 
-    create_machine.create(machine_config)
+    create_machine.create(machine_config, with_user_data=True)
 
     droplet = do.droplet_find_by_name(name)
-    __connect_info(machine_config, droplet)
+    if droplet is None:
+        msg(f"Machine '{name}' still not started")
+        return
+    __connect_info(machine_config, droplet, root=False)
+
+
+@machines.command(help="Start machine without configuring")
+@click.argument("name", required=True, type=str)
+def start_root(name: str):
+    machine_config = config.get_machine(name)
+    droplet = do.droplet_find_by_name(name)
+    if droplet is not None:
+        msg(f"Machine '{name}' already started")
+        __connect_info(machine_config, droplet, root=True)
+        return
+
+    create_machine.create(machine_config, with_user_data=False)
+
+    droplet = do.droplet_find_by_name(name)
+    if droplet is None:
+        msg(f"Machine '{name}' still not started")
+        return
+    __connect_info(machine_config, droplet, root=True)
 
 
 @machines.command(help="Stop machine")
