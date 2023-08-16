@@ -49,7 +49,7 @@ def __with_ssh(ip_addr: str):
     client = SSHClient()
     client.load_system_host_keys()
     client.set_missing_host_key_policy(AutoAddPolicy)
-    client.connect(ip_addr, username="root", timeout=1)
+    client.connect(ip_addr, username="root", timeout=5)
     try:
         yield client
     finally:
