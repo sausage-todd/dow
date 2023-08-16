@@ -11,7 +11,7 @@ def volumes():
 
 @volumes.command(help="List volumes")
 def list():
-    tab_data(["name", "size_gigabytes"], do.volumes_list())
+    tab_data(["name", "size_gigabytes", "fs_type"], do.volumes_list())
 
 
 @volumes.command(help="Delete volume")
@@ -24,8 +24,9 @@ def delete(name: str):
 @volumes.command(help="Create volume")
 @click.option("--name", required=True, type=str, help="Volume name")
 @click.option("--size", required=True, type=int, help="Volume size in GB")
-def create(name: str, size: int):
-    do.volume_create(name, size)
+@click.option("--fs-type", required=False, type=click.Choice(['ext4', 'xfs']), help="Filesystem type")
+def create(name: str, size: int, fs_type: str):
+    do.volume_create(name, size, fs_type)
     msg(f"Created volume '{name}'")
 
 

@@ -34,19 +34,22 @@ def list_sizes() -> list[ImageSize]:
 
 
 def volumes_list() -> list[Volume]:
-    return [Volume(**v) for v in get("/volumes")["volumes"]]
+    return [
+        Volume(**v, fs_type=v["filesystem_type"]) for v in get("/volumes")["volumes"]
+    ]
 
 
 def volume_create(
     name: str,
     size_gigabytes: int,
+    fs_type: str,
 ):
     return post(
         "/volumes",
         name=name,
         region=os.environ["DO_REGION"],
         size_gigabytes=size_gigabytes,
-        filesystem_type="ext4",
+        filesystem_type=fs_type,
     )
 
 

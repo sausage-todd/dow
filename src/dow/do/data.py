@@ -23,3 +23,4 @@ class Volume(BaseModel):
     id: str
     name: str
     size_gigabytes: int
+    fs_type: str
