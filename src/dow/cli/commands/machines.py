@@ -138,6 +138,7 @@ def create(name: str, size: str, image: str, volume: str, username: str, swapsiz
         volume=volume,
         username=username,
         swapsize=swapsize,
+        ports=[],
     )
 
     config.add_machine(machine_config)
@@ -167,6 +168,7 @@ def edit(
         volume=volume or machine_config.volume,
         username=username or machine_config.username,
         swapsize=swapsize or machine_config.swapsize,
+        ports=machine_config.ports,
     )
 
     config.update_machine(new_machine_config)
