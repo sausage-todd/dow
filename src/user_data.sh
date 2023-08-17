@@ -91,6 +91,16 @@ apt install --yes \
 log "adding user to docker group"
 usermod --append --groups docker "${USERNAME}"
 
+log "configuring file limits"
+sysctl fs.inotify.max_user_instances=256
+echo 'fs.inotify.max_user_instances = 256' >/etc/sysctl.d/60-inotify.conf
+cat >>/etc/security/limits.conf <<EOF
+${USERNAME}           soft    nofile          65535
+${USERNAME}           hard    nofile          65535
+EOF
+echo 'session required pam_limits.so' >>/etc/pam.d/common-session
+echo 'session required pam_limits.so' >>/etc/pam.d/common-session-noninteractive
+
 log "enabling byobu"
 sudo --user "${USERNAME}" byobu-enable
 
