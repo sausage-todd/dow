@@ -1,8 +1,9 @@
-import os
 
 import click
 import colorama
 import requests as r
+
+from dow import config
 
 BASE_URL = "https://api.digitalocean.com/v2"
 
@@ -18,7 +19,7 @@ def __req(
     if headers is None:
         headers = {}
 
-    token = os.environ["DO_TOKEN"]
+    token = config.do_token()
     headers["Authorization"] = f"Bearer {token}"
 
     url = f"{BASE_URL}{url_path}"

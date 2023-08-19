@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from paramiko.client import AutoAddPolicy, SSHClient
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from dow import do
+from dow import config, do
 from dow.cli.utils import msg
 from dow.config.data import MachineConfig
 from dow.do import svc
@@ -130,10 +130,11 @@ def create(machine_config: MachineConfig, with_user_data: bool):
 
     msg(f"Created droplet {droplet_id}")
 
-    do.firewall_add_droplet(
-        os.environ["DO_FIREWALL_ID"],
-        droplet_id,
-    )
+    for firewall_id in config.do_firewall_ids():
+        do.firewall_add_droplet(
+            firewall_id,
+            droplet_id,
+        )
 
     __wait_until_active(droplet_id)
 

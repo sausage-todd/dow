@@ -1,5 +1,4 @@
-import os
-
+from dow import config
 from dow.do.base import delete, get, post
 from dow.do.data import Distribution, ImageSize, Volume
 
@@ -47,7 +46,7 @@ def volume_create(
     return post(
         "/volumes",
         name=name,
-        region=os.environ["DO_REGION"],
+        region=config.do_region,
         size_gigabytes=size_gigabytes,
         filesystem_type=fs_type,
     )
@@ -60,7 +59,7 @@ def volume_resize(name: str, size_gigabytes: int):
     body = {
         "type": "resize",
         "size_gigabytes": size_gigabytes,
-        "region": os.environ["DO_REGION"],
+        "region": config.do_region(),
     }
 
     return post(f"/volumes/{volume_id}/actions", **body)
@@ -97,7 +96,7 @@ def droplet_create(
     result = post(
         "/droplets",
         name=name,
-        region=os.environ["DO_REGION"],
+        region=config.do_region(),
         size=size,
         image=image,
         ssh_keys=ssh_keys,
