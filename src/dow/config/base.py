@@ -22,7 +22,7 @@ def read() -> Config:
 def write(data: Config):
     config_path = __config_path()
     if not os.path.exists(config_path):
-        os.makedirs(config_path)
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
 
     with open(config_path, "wb") as out:
         tomli_w.dump(data.dict(), out)

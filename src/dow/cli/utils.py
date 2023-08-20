@@ -38,3 +38,22 @@ def msg(msg: str):
         ),
         err=True,
     )
+
+
+def error(msg: str):
+    click.echo(
+        "".join(
+            [
+                colorama.Fore.RED,
+                colorama.Style.BRIGHT,
+                "[!] ",
+                colorama.Style.RESET_ALL,
+                msg,
+            ]
+        ),
+        err=True,
+    )
+
+
+class DowError(Exception):
+    pass
