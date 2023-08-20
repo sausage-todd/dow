@@ -17,9 +17,7 @@ jobs:
         uses: abatilo/actions-poetry@v2
       - name: Poetry install
         run: poetry install
-      - name: isort check
-        run: poetry run isort . --check
-      - name: black check
-        run: poetry run black --check .
-      - name: pyright check
-        run: poetry run pyright .
+      - name: Setup just
+        uses: extractions/setup-just@v1
+      - name: Run lint
+        run: just lint
