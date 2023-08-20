@@ -8,7 +8,7 @@ class MachineConfig(BaseModel):
     image: str
     swapsize: int
     username: str
-    ports: list[str]
+    ports: list[int]
     init: str = ""
 
 

@@ -205,8 +205,8 @@ def ports():
 
 @ports.command(help="Add forwarded port")
 @click.option("--machine", required=True, type=str, help="Machine name")
-@click.option("--port", required=True, type=str, help="Port to forward")
-def add(machine: str, port: str):
+@click.option("--port", required=True, type=int, help="Port to forward")
+def add(machine: str, port: int):
     machine_config = config.get_machine(machine)
     machine_config.ports.append(port)
     config.update_machine(machine_config)
@@ -215,8 +215,8 @@ def add(machine: str, port: str):
 
 @ports.command(help="Remove forwarded port")
 @click.option("--machine", required=True, type=str, help="Machine name")
-@click.option("--port", required=True, type=str, help="Port to remove")
-def remove(machine: str, port: str):
+@click.option("--port", required=True, type=int, help="Port to remove")
+def remove(machine: str, port: int):
     machine_config = config.get_machine(machine)
     machine_config.ports.remove(port)
     config.update_machine(machine_config)

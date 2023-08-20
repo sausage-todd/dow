@@ -21,7 +21,7 @@ def __conf():
     conf.write(conf_path)
 
 
-def __map_port(port: str):
+def __map_port(port: int):
     return f"{port} localhost:{port}"
 
 
