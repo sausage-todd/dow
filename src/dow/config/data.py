@@ -26,9 +26,3 @@ class Config(BaseModel):
             firewall_ids=[],
             machines=[],
         )
-
-    def validate(self):
-        if not self.do_token:
-            raise Exception("DigitalOcean token not set")
-        if not self.do_region:
-            raise Exception("DigitalOcean region not set")
