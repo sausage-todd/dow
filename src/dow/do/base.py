@@ -1,4 +1,3 @@
-
 import click
 import colorama
 import requests as r
