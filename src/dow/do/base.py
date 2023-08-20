@@ -1,3 +1,5 @@
+from typing import Optional
+
 import click
 import colorama
 import requests as r
@@ -10,10 +12,10 @@ BASE_URL = "https://api.digitalocean.com/v2"
 def __req(
     method: str,
     url_path: str,
-    data: dict = None,
-    json: dict = None,
-    headers: dict = None,
-    params: dict = None,
+    data: Optional[dict] = None,
+    json: Optional[dict] = None,
+    headers: Optional[dict] = None,
+    params: Optional[dict] = None,
 ):
     if headers is None:
         headers = {}

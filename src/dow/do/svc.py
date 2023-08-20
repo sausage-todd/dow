@@ -1,7 +1,7 @@
 from dow.do import droplet_find_by_id
 
 
-def __get_droplet(droplet: dict | str | int):
+def __get_droplet(droplet: dict | str | int) -> dict:
     if type(droplet) == str or type(droplet) == int:
         return droplet_find_by_id(droplet)
     elif type(droplet) == dict:
