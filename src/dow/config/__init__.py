@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 
+from dow.cli.utils import DowError
 from dow.config.base import read, write
 from dow.config.data import MachineConfig
 
@@ -22,7 +23,7 @@ def write_machines(machines: list[MachineConfig]):
 
 def __check_empty(value: str, name: str) -> str:
     if not value:
-        raise Exception(f"{name} not set")
+        raise DowError(f"{name} not set")
     return value
 
 
@@ -65,16 +66,16 @@ def __replace_machine(machines: list[MachineConfig], config: MachineConfig):
 def add_machine(config: MachineConfig):
     machines = read_machines()
     if any(m.name == config.name for m in machines):
-        raise Exception(f"Machine '{config.name}' already exists")
+        raise DowError(f"Machine '{config.name}' already exists")
 
-    machines = __replace_machine(machines, config)
+    machines = machines + [config]
     write_machines(machines)
 
 
 def update_machine(config: MachineConfig):
     machines = read_machines()
     if not any(m.name == config.name for m in machines):
-        raise Exception(f"Machine '{config.name}' not found")
+        raise DowError(f"Machine '{config.name}' not found")
 
     machines = __replace_machine(machines, config)
     write_machines(machines)
@@ -84,12 +85,12 @@ def get_machine(name: str) -> MachineConfig:
     for machine in read_machines():
         if machine.name == name:
             return machine
-    raise Exception(f"Machine {name} not found")
+    raise DowError(f"Machine {name} not found")
 
 
 def delete_machine(name: str):
     machines = read_machines()
     if not any(m.name == name for m in machines):
-        raise Exception(f"Machine '{name}' not found")
+        raise DowError(f"Machine '{name}' not found")
     machines = [m for m in machines if m.name != name]
     write_machines(machines)

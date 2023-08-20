@@ -1,4 +1,5 @@
 from dow import config
+from dow.cli.utils import DowError
 from dow.do.base import delete, get, post
 from dow.do.data import Distribution, ImageSize, Volume
 
@@ -68,7 +69,7 @@ def volume_resize(name: str, size_gigabytes: int):
 def volume_find_by_name(name: str):
     result = get("/volumes", name=name)
     if len(result["volumes"]) == 0:
-        raise Exception(f"Volume {name} not found")
+        raise DowError(f"Volume {name} not found")
     return result["volumes"][0]
 
 
