@@ -74,9 +74,9 @@ def delete(name: str):
 
 def __connect_info(machine_config: MachineConfig, droplet: dict, root: bool):
     machine = full_machine(machine_config, droplet)
-    host_key = ssh_config.update_entry(machine, root)
+    host_key = ssh_config.update_entry(machine, root=root)
 
-    msg(f"To connect: ssh {host_key}")
+    msg(f"Ssh config updated, connect: ssh {host_key}")
 
 
 @machines.command(help="Connect to machine")
@@ -89,7 +89,7 @@ def connect(name: str, root: bool):
         msg(f"Machine '{name}' not started")
         return
 
-    __connect_info(machine_config, droplet, root)
+    __connect_info(machine_config, droplet, root=root)
 
 
 @machines.command(help="Start machine")
@@ -212,6 +212,9 @@ def add(machine: str, port: int):
     config.update_machine(machine_config)
     msg(f"Added port '{port}' to machine '{machine}'")
 
+    if droplet := do.droplet_find_by_name(machine):
+        __connect_info(machine_config, droplet, root=False)
+
 
 @ports.command(help="Remove forwarded port")
 @click.option("--machine", required=True, type=str, help="Machine name")
@@ -221,3 +224,6 @@ def remove(machine: str, port: int):
     machine_config.ports.remove(port)
     config.update_machine(machine_config)
     msg(f"Removed port '{port}' from machine '{machine}'")
+
+    if droplet := do.droplet_find_by_name(machine):
+        __connect_info(machine_config, droplet, root=False)
