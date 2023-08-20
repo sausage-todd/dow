@@ -46,7 +46,7 @@ def volume_create(
     return post(
         "/volumes",
         name=name,
-        region=config.do_region,
+        region=config.do_region(),
         size_gigabytes=size_gigabytes,
         filesystem_type=fs_type,
     )
