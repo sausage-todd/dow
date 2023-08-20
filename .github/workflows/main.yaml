@@ -1,0 +1,25 @@
+name: CI
+on:
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Configure python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Configure poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Poetry install
+        run: poetry install
+      - name: isort check
+        run: poetry run isort . --check
+      - name: black check
+        run: poetry run black --check .
+      - name: pyright check
+        run: poetry run pyright .

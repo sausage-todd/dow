@@ -3,8 +3,7 @@ from typing import Optional
 import click
 
 from dow import config as cfg
-from dow import do
-from dow.cli.utils import msg, tab_data
+from dow.cli.utils import msg
 
 
 @click.group(name="config", help="DOW configuration")

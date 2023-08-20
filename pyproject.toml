@@ -17,6 +17,11 @@ paramiko = "^3.2.0"
 sshconf = "^0.2.5"
 
 
+[tool.poetry.group.dev.dependencies]
+isort = "^5.12.0"
+black = "^23.7.0"
+pyright = "^1.1.323"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -24,3 +29,11 @@ build-backend = "poetry.core.masonry.api"
 [tool.isort]
 profile = "black"
 src_paths = ["src"]
+
+[tool.pyright]
+venv = ".venv"
+venvPath = "."
+
+reportUnusedImports = true
+reportUnusedImport = true
+reportUnusedVariable = true
