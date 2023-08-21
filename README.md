@@ -1,6 +1,8 @@
 # DOW
 A tool to manage on-demand cloud development environments within Digital Ocean. 
 
+[![demo](https://asciinema.org/a/6vyKr0yek5WQesJYgn4MTvR5E.svg)](https://asciinema.org/a/6vyKr0yek5WQesJYgn4MTvR5E?autoplay=1)
+
 ## Why
 Sometimes you might have a very limited internet bandwidth, but you still need to do the work; you still need to develop that feature for a software, which has a bunch of NPM dependencies, and runs development environment in a multi-docker container setup.
 
