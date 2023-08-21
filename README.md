@@ -27,6 +27,7 @@ Thanks to the magic of an SSH Agent and its forwarding, from a cloud dev workspa
 - A configured SSH key in Digital Ocean (here https://cloud.digitalocean.com/account/security)
 - Some money to pay for volume gigabytes and droplet hours
 - This tool
+- _Optional:_ A configured firewall in Digital Ocean allowing only SSH access (because you don't want script-kiddies messing with your dev environment)
 
 ## How to use the tool
 
@@ -37,7 +38,15 @@ Thanks to the magic of an SSH Agent and its forwarding, from a cloud dev workspa
 - Make sure `bin/dow` is on your `$PATH`
 
 ### The tool
-1. Create a volume
+1. Configure it
+    ```
+    % dow config token XXXXXXXXXXX
+    [+] Token updated
+    % dow config region blah
+    [+] Region updated
+    % dow config firewalls add fbcb7f36-334b-42db-8fb0-0d3f9ffe6277
+    [+] Firewall fbcb7f36-334b-42db-8fb0-0d3f9ffe6277 added
+2. Create a volume
     ```
     % dow volumes create --name dev --size 20 --fs-type xfs
     POST https://api.digitalocean.com/v2/volumes
@@ -47,22 +56,27 @@ Thanks to the magic of an SSH Agent and its forwarding, from a cloud dev workspa
 	name       size_gigabytes  fs_type
 	dev        20              xfs
     ```
-2. Create a machine
+3. Create a machine
     ```
-	% dow machines create \
-		--name dev \
-		--size c-8 \
-		--image debian-11-x64 \
-		--volume dev \
-		--username misha \
-		--swapsize 20
-	[+] Created machine dev
-	% dow machines list
-	GET https://api.digitalocean.com/v2/droplets {}
-	name   size  image          volume  username  swapsize  status  ip  ports
-	dev    c-8   debian-11-x64  dev     misha     20        CONFIG      []
-	```
-3. Start the machine
+    % dow machines create \
+        --name dev \
+        --size c-8 \
+        --image debian-11-x64 \
+        --volume dev \
+        --username misha \
+        --swapsize 20
+    [+] Created machine dev
+    % dow machines list
+    GET https://api.digitalocean.com/v2/droplets {}
+    name   size  image          volume  username  swapsize  status  ip  ports
+    dev    c-8   debian-11-x64  dev     misha     20        CONFIG      []
+    ```
+4. Configure forwarded ports
+    ```
+    % dow machines ports add --machine dev --port 5432
+    [+] Added port '5432' to machine 'dev'
+    ```
+4. Start the machine
     ```
     % dow machines start dev 
 	GET https://api.digitalocean.com/v2/droplets {'name': 'dev'}
@@ -109,7 +123,8 @@ Thanks to the magic of an SSH Agent and its forwarding, from a cloud dev workspa
 4. Connect
     ```
     % ssh dev-dow
-	```
+    ```
+
 # ⚠️ Warning
 Machines don’t shutdown automatically when idling (yet), so if you want to save some costs, remember to shut them down when you don’t need them anymore.
 
