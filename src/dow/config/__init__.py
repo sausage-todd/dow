@@ -60,6 +60,8 @@ def remove_firewall_id(firewall_id: str):
 
 
 def __replace_machine(machines: list[MachineConfig], config: MachineConfig):
+    config.ports = list(set(config.ports))
+
     return [config if m.name == config.name else m for m in machines]
 
 
