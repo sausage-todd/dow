@@ -19,7 +19,7 @@ A development environment consists of two parts: a volume and a machine. Volume 
 
 Since computing resources are quite expensive, we shut machines down when we don’t need them anymore. While we keep volumes, so we don’t need to reconfigure our development environment again and again every time.
 
-Thanks to the magic of an SSH Agent and its forwarding, from a cloud dev workspace you get access everywhere you already have access from your local machine, including GitHub.
+Thanks to the magic of the SSH Agent and its forwarding, in the cloud dev workspace you still have your access everywhere you already have it from your laptop, including GitHub.
 
 ## What you need
 - A Digital Ocean account (get one here [https://www.digitalocean.com](https://www.digitalocean.com/) if you still don’t have it)
@@ -131,20 +131,24 @@ Machines don’t shutdown automatically when idling (yet), so if you want to sav
 # Features
 - Create named volumes of different sizes, which you can attach to machines
 - Create and store configuration of as many cloud development environments as you need locally in a dotfile in TOML format
-- Reuse SSH keys from your Digital Ocean account, so you can SSH into machines without any extra hassle
-- Configure your preferred username 
+- Reuse SSH keys from your Digital Ocean account, so you can SSH into machines without extra hassle
+- Configure your preferred username
 - Configure port forwarding per machine
 - Pre-configured on a machine:
 	- Docker with compose- and buildx plugins
-	- Mount-bind of the whole `/home` to your attached volume, so your work is persisted
-	- Symlinked `/var/lib/docker` to your attached volume, so you keep docker cache and running containers between machine restarts
+- Mount-bind of the whole `/home` to your attached volume
+	- This persists your work,
+	- And lets you keep whatever you installed with [Linuxbrew](https://github.com/Homebrew/brew)
+- Symlinked `/var/lib/docker` to your attached volume, so you keep docker cache and running containers between machine restarts
 - Adding entries to your `~/.ssh/config` for easier access
 
 # Not yet features
-- Supporting images other than `debian-11-x64` due to hardcoded `user_data`
+- Supporting images other than `debian-11-x64` due to hardcoded OS-specific init script
 - Shutting down machines when idling to save costs
-
 
 # Alternatives
 - [Gitpod](https://www.gitpod.io/)
+- [GitHub Codespaces](https://github.com/features/codespaces)
+- [Google Cloud Workspaces](https://cloud.google.com/workstations/docs)
 - [Coder](https://coder.com)
+- [Hocus](https://hocus.dev/)
