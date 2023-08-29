@@ -1,4 +1,3 @@
-import os
 import textwrap
 import time
 from contextlib import contextmanager
@@ -15,7 +14,7 @@ from dow.do import svc
 def __create_user_data(
     install_log: str, username: str, volume_name: str, swapsize: int
 ):
-    with open(os.environ["USER_DATA_FILE"], "r") as f:
+    with open("src/user_data.sh", "r") as f:
         user_data = f.read()
         return (
             textwrap.dedent(
